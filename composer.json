@@ -1,0 +1,34 @@
+{
+    "name": "mickaelbillard/amazon-mws",
+    "type": "library",
+    "license": "Apache-2.0",
+    "description": "Amazon Mws",
+    "keywords": ["amazon", "mws"],
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Mickaël BILLARD",
+            "homepage": "https://github.com/mickaelbillard"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "FBAInboundServiceMWS_": "src/AmazonPhpClientLibrary/",
+            "FBAInventoryServiceMWS_": "src/AmazonPhpClientLibrary/",
+            "FBAOutboundServiceMWS_": "src/AmazonPhpClientLibrary/",
+            "MarketplaceWebService_": "src/AmazonPhpClientLibrary/",
+            "MarketplaceWebServiceOrders_": "src/AmazonPhpClientLibrary/",
+            "MarketplaceWebServiceProducts_": "src/AmazonPhpClientLibrary/",
+            "MarketplaceWebServiceSellers_": "src/AmazonPhpClientLibrary/",
+            "MWSCartService_": "src/AmazonPhpClientLibrary/",
+            "MWSCustomerService_": "src/AmazonPhpClientLibrary/",
+            "MWSFinancesService_": "src/AmazonPhpClientLibrary/",
+            "MWSMerchantFulfillmentService_": "src/AmazonPhpClientLibrary/",
+            "MWSRecommendationsSectionService_": "src/AmazonPhpClientLibrary/",
+            "MWSSubscriptionsService_": "src/AmazonPhpClientLibrary/"
+        }
+    }
+}
