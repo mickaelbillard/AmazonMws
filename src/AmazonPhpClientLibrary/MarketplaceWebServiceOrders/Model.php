@@ -440,4 +440,83 @@ abstract class MarketplaceWebServiceOrders_Model
         return ($sz===0 || array_keys($var) === range(0, sizeof($var) - 1));
     }
 
+    /**
+     * Add by Mickaël BILLARD
+     * Convert the object to an array
+     *
+     * @return array
+     */
+    public function convertToArray():array{
+        $array = [];
+
+        foreach($this->_fields as $fieldName => $fieldAttrs) {
+            $array[$fieldName]['FieldType'] = $fieldAttrs['FieldType'];
+            if($fieldAttrs['FieldValue'] !== null && $fieldAttrs['FieldValue'] !== []) {
+                if (is_array($fieldAttrs['FieldType'])) {
+                    foreach ($fieldAttrs['FieldValue'] as $id => $value){
+                        if($value !== null) {
+                            if ($this->_isComplexType($fieldAttrs['FieldType'][$id])) {
+                                $array[$fieldName]['FieldValue'][$id] = $value->toAssociativeArray();
+                            } else {
+                                $array[$fieldName]['FieldValue'][$id] = $value;
+                            }
+                        }
+                    }
+                } else {
+                    if ($this->_isComplexType($fieldAttrs['FieldType'])) {
+                        $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue']->toAssociativeArray();
+                    } else {
+                        $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue'];
+                    }
+                }
+            }else{
+                $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue'];
+            }
+        }
+        return $array;
+    }
+
+    /**
+     * Add by Mickaël BILLARD
+     * Load the object from an array
+     *
+     * @param $array
+     *
+     * @return void
+     */
+    public function loadFromArray(array $array):void{
+        foreach($array as $fieldName => $fieldAttrs) {
+            if(is_array($fieldAttrs['FieldType'])){
+                if($fieldAttrs['FieldValue'] !== null && $fieldAttrs['FieldValue'] !== []) {
+                    $values = [];
+                    foreach ($fieldAttrs['FieldValue'] as $value) {
+
+                        if ($this->_isComplexType($fieldAttrs['FieldType'][0])) {
+                            if ($value !== null) {
+                                $complex = new $fieldAttrs['FieldType'][0]();
+                                $complex->loadFromAssociativeArray($value);
+                                $this->__set($fieldName, $complex);
+                                $values[] = $complex;
+                            }
+                        } else {
+                            $values[] = $value;
+                        }
+                    }
+                    $this->__set($fieldName, $values);
+                }else{
+                    $this->__set($fieldName, $fieldAttrs['FieldValue']);
+                }
+            }else{
+                if ($this->_isComplexType($fieldAttrs['FieldType'])) {
+                    if($fieldAttrs['FieldValue'] !== null) {
+                        $complex = new $fieldAttrs['FieldType']();
+                        $complex->loadFromAssociativeArray($fieldAttrs['FieldValue']);
+                        $this->__set($fieldName, $complex);
+                    }
+                }else{
+                    $this->__set($fieldName, $fieldAttrs['FieldValue']);
+                }
+            }
+        }
+    }
 }
