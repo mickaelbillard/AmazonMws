@@ -456,7 +456,7 @@ abstract class MarketplaceWebServiceOrders_Model
                     foreach ($fieldAttrs['FieldValue'] as $id => $value){
                         if($value !== null) {
                             if ($this->_isComplexType($fieldAttrs['FieldType'][$id])) {
-                                $array[$fieldName]['FieldValue'][$id] = $value->toAssociativeArray();
+                                $array[$fieldName]['FieldValue'][$id] = $value->convertToArray();
                             } else {
                                 $array[$fieldName]['FieldValue'][$id] = $value;
                             }
@@ -464,7 +464,7 @@ abstract class MarketplaceWebServiceOrders_Model
                     }
                 } else {
                     if ($this->_isComplexType($fieldAttrs['FieldType'])) {
-                        $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue']->toAssociativeArray();
+                        $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue']->convertToArray();
                     } else {
                         $array[$fieldName]['FieldValue'] = $fieldAttrs['FieldValue'];
                     }
@@ -494,7 +494,7 @@ abstract class MarketplaceWebServiceOrders_Model
                         if ($this->_isComplexType($fieldAttrs['FieldType'][0])) {
                             if ($value !== null) {
                                 $complex = new $fieldAttrs['FieldType'][0]();
-                                $complex->loadFromAssociativeArray($value);
+                                $complex->loadFromArray($value);
                                 $this->__set($fieldName, $complex);
                                 $values[] = $complex;
                             }
@@ -510,7 +510,7 @@ abstract class MarketplaceWebServiceOrders_Model
                 if ($this->_isComplexType($fieldAttrs['FieldType'])) {
                     if($fieldAttrs['FieldValue'] !== null) {
                         $complex = new $fieldAttrs['FieldType']();
-                        $complex->loadFromAssociativeArray($fieldAttrs['FieldValue']);
+                        $complex->loadFromArray($fieldAttrs['FieldValue']);
                         $this->__set($fieldName, $complex);
                     }
                 }else{
