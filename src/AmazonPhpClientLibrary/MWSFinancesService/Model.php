@@ -455,7 +455,7 @@ abstract class MWSFinancesService_Model
                 if (is_array($fieldAttrs['FieldType'])) {
                     foreach ($fieldAttrs['FieldValue'] as $id => $value){
                         if($value !== null) {
-                            if ($this->_isComplexType($fieldAttrs['FieldType'][$id])) {
+                            if ($this->_isComplexType($fieldAttrs['FieldType'][0])) {
                                 $array[$fieldName]['FieldValue'][$id] = $value->convertToArray();
                             } else {
                                 $array[$fieldName]['FieldValue'][$id] = $value;
