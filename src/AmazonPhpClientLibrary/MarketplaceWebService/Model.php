@@ -141,37 +141,37 @@ abstract class MarketplaceWebService_Model
     }
 
 
-    
+
     /**
-     * Construct from DOMElement 
-     * 
-     * This function iterates over object fields and queries XML 
-     * for corresponding tag value. If query succeeds, value extracted 
-     * from xml, and field value properly constructed based on field type. 
+     * Construct from DOMElement
+     *
+     * This function iterates over object fields and queries XML
+     * for corresponding tag value. If query succeeds, value extracted
+     * from xml, and field value properly constructed based on field type.
      *
      * Field types defined as arrays always constructed as arrays,
      * even if XML contains a single element - to make sure that
      * data structure is predictable, and no is_array checks are
      * required.
-     * 
+     *
      * @param DOMElement $dom XML element to construct from
      */
     private function fromDOMElement(DOMElement $dom)
     {
         $xpath = new DOMXPath($dom->ownerDocument);
         $xpath->registerNamespace('a', 'http://mws.amazonaws.com/doc/2009-01-01/');
-        
+
         foreach ($this->fields as $fieldName => $field) {
-            $fieldType = $field['FieldType'];   
+            $fieldType = $field['FieldType'];
             if (is_array($fieldType)) {
                 if ($this->isComplexType($fieldType[0])) {
                     $elements = $xpath->query("./a:$fieldName", $dom);
                     if ($elements->length >= 1) {
-                        require_once (str_replace('_', DIRECTORY_SEPARATOR, $fieldType[0]) . ".php");
+                        require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $fieldType[0]) . ".php");
                         foreach ($elements as $element) {
                             $this->fields[$fieldName]['FieldValue'][] = new $fieldType[0]($element);
                         }
-                    } 
+                    }
                 } else {
                     $elements = $xpath->query("./a:$fieldName", $dom);
                     if ($elements->length >= 1) {
@@ -179,33 +179,33 @@ abstract class MarketplaceWebService_Model
                             $text = $xpath->query('./text()', $element);
                             $this->fields[$fieldName]['FieldValue'][] = $text->item(0)->data;
                         }
-                    }  
+                    }
                 }
             } else {
                 if ($this->isComplexType($fieldType)) {
                     $elements = $xpath->query("./a:$fieldName", $dom);
                     if ($elements->length == 1) {
-                        require_once (str_replace('_', DIRECTORY_SEPARATOR, $fieldType) . ".php");
+                        require_once (dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $fieldType) . ".php");
                         $this->fields[$fieldName]['FieldValue'] = new $fieldType($elements->item(0));
-                    }   
+                    }
                 } else {
                     $element = $xpath->query("./a:$fieldName/text()", $dom);
                     $data = null;
                     if ($element->length == 1) {
-                    	switch($this->fields[$fieldName]['FieldType']) {
-                    		case 'DateTime':
-                    			$data = new DateTime($element->item(0)->data, 
-                    				new DateTimeZone('UTC'));
-                    			break;
-                    		case 'bool':
-                    			$value = $element->item(0)->data;
-                    			$data = $value === 'true' ? true : false;
-                    			break;
-                    		default:
-                    			$data = $element->item(0)->data;
-                    			break;
-                    	}
-                      $this->fields[$fieldName]['FieldValue'] = $data;
+                        switch($this->fields[$fieldName]['FieldType']) {
+                            case 'DateTime':
+                                $data = new DateTime($element->item(0)->data,
+                                    new DateTimeZone('UTC'));
+                                break;
+                            case 'bool':
+                                $value = $element->item(0)->data;
+                                $data = $value === 'true' ? true : false;
+                                break;
+                            default:
+                                $data = $element->item(0)->data;
+                                break;
+                        }
+                        $this->fields[$fieldName]['FieldValue'] = $data;
                     }
                 }
             }
